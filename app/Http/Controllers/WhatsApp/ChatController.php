@@ -410,6 +410,26 @@ class ChatController extends Controller
      */
     private function syncAgentsWithContacts()
     {
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            Chat::whereIn('chat.type', ['lead', 'customer'])
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('contacts')
+                        ->whereColumn('contacts.id', 'chat.type_id');
+                })
+                ->update([
+                    'chat.agent' => DB::raw(
+                        "json_set(COALESCE(NULLIF(chat.agent, ''), '{}'), " .
+                        "'$.assign_id', (SELECT contacts.assigned_id FROM contacts WHERE contacts.id = chat.type_id), " .
+                        "'$.agents_id', COALESCE(json_extract(NULLIF(chat.agent, ''), '$.agents_id'), 0))"
+                    ),
+                ]);
+
+            return;
+        }
+
         Chat::join('contacts', 'contacts.id', '=', 'chat.type_id')
             ->whereIn('chat.type', ['lead', 'customer'])
             ->update([

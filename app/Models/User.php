@@ -65,8 +65,10 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSendWelcomeMail($value)
  *
  * @mixin \Eloquent
+ * MustVerifyEmail(removed)
  */
-class User extends Authenticatable implements MustVerifyEmail
+
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -84,10 +86,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'default_language',
         'profile_image_url',
         'email',
-        'password',
-        'role_id',
-        'is_admin',
         'email_verified_at',
+        'password',
+        'is_admin',
+        'send_welcome_mail',
+        'active',
     ];
 
     /**

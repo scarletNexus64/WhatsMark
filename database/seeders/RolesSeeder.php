@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class RolesSeeder extends Seeder
 {
@@ -23,11 +23,10 @@ class RolesSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::create([
-                'name'       => $role,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            Role::updateOrCreate(
+                ['name' => $role, 'guard_name' => 'web'],
+                ['name' => $role, 'guard_name' => 'web']
+            );
         }
     }
 }

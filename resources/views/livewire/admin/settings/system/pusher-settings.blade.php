@@ -123,7 +123,12 @@
                   </div>
                 </x-label>
                 <div class="mt-1">
-                  <button type="button" x-on:click="desk_notify = !desk_notify"
+                  <button type="button" x-on:click="
+                      desk_notify = !desk_notify;
+                      if (desk_notify) {
+                        Alpine.store('pusherManager')?.requestDesktopNotificationPermission?.();
+                      }
+                    "
                     class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-slate-800"
                     role="switch" :aria-checked="desk_notify.toString()"
                     :class="{

@@ -52,6 +52,8 @@ class WmActivityLogsSeeder extends Seeder
                     ],
                 ]),
                 'recorded_at' => now()->subDays(rand(0, 30)), // Random date within the last 30 days
+                'created_at'  => now(),
+                'updated_at'  => now(),
             ];
         }
 

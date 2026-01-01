@@ -10,6 +10,7 @@ class NotificationSeeder extends Seeder
 {
     public function run()
     {
+        $userId = DB::table('users')->value('id') ?? 1;
         $notifications = [
             [
                 'message'    => 'Caleb Flakelar commented on Admin',
@@ -43,7 +44,7 @@ class NotificationSeeder extends Seeder
                 'id'              => Str::uuid(),
                 'type'            => $notification['type'],
                 'notifiable_type' => 'App\\Models\\User',
-                'notifiable_id'   => 1,
+                'notifiable_id'   => $userId,
                 'data'            => json_encode([
                     'message' => $notification['message'],
                     'type'    => $notification['type'],

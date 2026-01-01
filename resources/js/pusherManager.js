@@ -5,15 +5,24 @@ document.addEventListener('alpine:init', () => {
     },
 
     setupDesktopNotifications() {
-      if ('Notification' in window) {
-        if (Notification.permission !== 'granted') {
-          Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-            
-            }
-          });
-        }
+      if (!('Notification' in window)) {
+        return;
       }
+
+      // Permission must be requested from a user gesture; don't prompt on init.
+    },
+
+    requestDesktopNotificationPermission() {
+      if (!('Notification' in window)) {
+        console.warn('Desktop notifications not supported');
+        return Promise.resolve('unsupported');
+      }
+
+      if (Notification.permission === 'granted') {
+        return Promise.resolve('granted');
+      }
+
+      return Notification.requestPermission();
     },
 
     showDesktopNotification(title, options = {}) {

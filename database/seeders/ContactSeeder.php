@@ -19,9 +19,10 @@ class ContactSeeder extends Seeder
         $this->faker = Faker::create();
     }
 
-    protected function generateContact()
+    protected function generateContact(array $countryIds)
     {
         $createdAt = now()->subDays(rand(1, 365));
+        $countryId = $countryIds[array_rand($countryIds)];
 
         return [
             'firstname'          => $this->faker->firstName(),
@@ -29,17 +30,17 @@ class ContactSeeder extends Seeder
             'company'            => $this->faker->optional(0.7)->company(),
             'type'               => $this->faker->randomElement(['lead', 'customer']),
             'description'        => $this->faker->optional(0.6)->paragraph(),
-            'country_id'         => DB::table('countries')->inRandomOrder()->first()->id,
+            'country_id'         => $countryId,
             'zip'                => $this->faker->optional(0.8)->postcode(),
             'city'               => $this->faker->optional(0.8)->city(),
             'state'              => $this->faker->optional(0.8)->state(),
             'address'            => $this->faker->optional(0.8)->streetAddress(),
             'assigned_id'        => DB::table('users')->inRandomOrder()->first()->id,
-            'status_id'          => DB::table('statuses')->inRandomOrder()->first()->id,
+            'status'             => $this->faker->randomElement(['pending', 'sent', 'delivered', 'read', 'failed']),
             'source_id'          => DB::table('sources')->inRandomOrder()->first()->id,
             'email'              => $this->faker->optional(0.9)->safeEmail(),
             'website'            => $this->faker->optional(0.4)->url(),
-            'phone'              => $this->faker->e164PhoneNumber(),
+            'phone'              => $this->faker->unique()->e164PhoneNumber(),
             'addedfrom'          => DB::table('users')->inRandomOrder()->first()->id,
             'dateassigned'       => now()->subDays(rand(1, 30))->format('Y-m-d H:i:s'),
             'last_status_change' => $this->faker->boolean(80) ? now()->subDays(rand(1, 30))->format('Y-m-d H:i:s') : null,
@@ -61,7 +62,7 @@ class ContactSeeder extends Seeder
             $countryIds = DB::table('countries')->pluck('id')->toArray();
 
             if (empty($userIds) || empty($statusIds) || empty($sourceIds) || empty($countryIds)) {
-                $this->command->error('Required data missing in related tables!');
+                $this->command->error('Required data missing in related tables (users/statuses/sources/countries)!');
 
                 return;
             }
@@ -75,7 +76,7 @@ class ContactSeeder extends Seeder
                 $contacts = [];
 
                 for ($j = 0; $j < $this->chunkSize; $j++) {
-                    $contacts[] = $this->generateContact();
+                    $contacts[] = $this->generateContact($countryIds);
                 }
 
                 DB::table('contacts')->insert($contacts);

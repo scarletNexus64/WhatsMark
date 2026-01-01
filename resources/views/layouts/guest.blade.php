@@ -32,7 +32,13 @@
   <!-- Styles -->
 
   @livewireStyles
-  @vite('resources/css/app.css')
+  @php
+    $viteAvailable = \Illuminate\Support\Facades\Vite::isRunningHot()
+        || file_exists(public_path('build/manifest.json'));
+  @endphp
+  @if ($viteAvailable)
+    @vite('resources/css/app.css')
+  @endif
   <script>
     window.pusherConfig = {
       key: '{{ get_setting('pusher.app_key') }}',
@@ -56,7 +62,9 @@
   <!-- Scripts -->
   @livewireScripts
 
-  @vite('resources/js/app.js')
+  @if ($viteAvailable)
+    @vite('resources/js/app.js')
+  @endif
   @stack('scripts')
 </body>
 

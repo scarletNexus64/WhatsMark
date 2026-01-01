@@ -1,0 +1,57 @@
+EAAMNF6uJS3oBQRMqZCczfKuRFffIl6jWK8xpLz5cuKVh0tWWCB2t67Fiuq7LPM8LKlJgSgZC0JFt0gudvWM86R5URoeDdwlmA5tu2P73R2x9t5zZCvl8zv6AcZCQp7u13ZAijXZCzfxZCDwAOJc05UuH48LSg49ltSlyCA1x05nhRVHuKLNqmbXsQfA0LuThF9dOES7ThtKDmVXNa0ZAw0OSlUUrcZA5OoBqcioaxw84RnI1ZBUhzzwEUYuqvHRu1CXWPHtPnmJnujrwWA9LrK2ZADago2f6vy2NBaUSwZDZD
+
+Sélectionnez le numéro de téléphone à l’origine de l’appel
+Un compte WhatsApp Business test et un numéro de téléphone test ont été générés pour vous envoyer des messages test gratuitement pendant 90 jours.
+De
+Test number: +1 555 150 1754
+​
+ID du compte WhatsApp Business : 1541165313816036
+ID du numéro de téléphone : 944979078700319
+
+==========whatsapp==========
+token=EAAMNF6uJS3oBQSxouzBYJM779OZCP4EE998fc8DOmBfCa4h9GnNJikxVTQLGurIuLyZCwV0hD1nZB431F9zqm2KZBghG0TNbXMX2BBtCZBcIWV8OVqT68RTYlHeb9dvAbcLUEn2Q3QecsfSzCAMSKY4PdrCRw0op5wk5ohmrZCre9D9TWThskZB97XZBvIR7ogZDZD
+
+
+▼
+{"object":"whatsapp_business_account","entry":[{"id":"1541165313816036","changes...
+Charge utile complète :
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1541165313816036",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15551501754",
+              "phone_number_id": "944979078700319"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgMMjM3Njc2NzM1MTM4FQIAERgSQzkxNThENDJEMzc0RDhDQUUwAA==",
+                "status": "failed",
+                "timestamp": "1767163097",
+                "recipient_id": "237676735138",
+                "recipient_logical_id": "62608308699174",
+                "errors": [
+                  {
+                    "code": 131049,
+                    "title": "This message was not delivered to maintain healthy ecosystem engagement.",
+                    "message": "This message was not delivered to maintain healthy ecosystem engagement.",
+                    "error_data": {
+                      "details": "In order to maintain a healthy ecosystem engagement, the message failed to be delivered."
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

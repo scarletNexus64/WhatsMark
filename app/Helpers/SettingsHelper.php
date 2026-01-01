@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 if (! function_exists('get_settings_classes')) {
@@ -29,6 +30,28 @@ if (! function_exists('get_settings_classes')) {
     }
 }
 
+if (! function_exists('settings_table_exists')) {
+    /**
+     * Check if the settings table exists without throwing during install/upgrade.
+     */
+    function settings_table_exists(): bool
+    {
+        static $exists = null;
+
+        if ($exists !== null) {
+            return $exists;
+        }
+
+        try {
+            $exists = Schema::hasTable('settings');
+        } catch (\Throwable $e) {
+            $exists = false;
+        }
+
+        return $exists;
+    }
+}
+
 if (! function_exists('get_settings_by_group')) {
     /**
      * Get all settings for a specific group with in-memory caching.
@@ -39,6 +62,10 @@ if (! function_exists('get_settings_by_group')) {
         static $instances = [];
 
         try {
+            if (! settings_table_exists()) {
+                return $default;
+            }
+
             $settingsClasses = get_settings_classes();
 
             if (! isset($settingsClasses[$group])) {
@@ -69,6 +96,10 @@ if (! function_exists('get_all_settings')) {
         static $instances = [];
 
         try {
+            if (! settings_table_exists()) {
+                return [];
+            }
+
             return collect(get_settings_classes())
                 ->mapWithKeys(function ($class, $group) use (&$instances) {
                     if (! isset($instances[$group])) {
@@ -95,6 +126,10 @@ if (! function_exists('set_setting')) {
     function set_setting(string $key, mixed $value): bool
     {
         try {
+            if (! settings_table_exists()) {
+                return false;
+            }
+
             [$group, $setting] = explode('.', $key);
             $settingsClasses   = get_settings_classes();
 
@@ -131,6 +166,10 @@ if (! function_exists('set_settings_batch')) {
     function set_settings_batch(string $group, array $settings): bool
     {
         try {
+            if (! settings_table_exists()) {
+                return false;
+            }
+
             $settingsClasses = get_settings_classes();
 
             if (! isset($settingsClasses[$group])) {
@@ -195,6 +234,10 @@ if (! function_exists('get_setting')) {
         }
 
         try {
+            if (! settings_table_exists()) {
+                return $default;
+            }
+
             [$group, $setting] = explode('.', $key);
 
             $settings = get_settings_by_group($group);

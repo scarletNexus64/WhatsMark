@@ -39,8 +39,7 @@ return new class extends Migration
         Schema::create('contact_notes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('contact_id')->constrained('contacts')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users');
-            $table->text('note');
+            $table->text('notes_description');
             $table->timestamps();
         });
 

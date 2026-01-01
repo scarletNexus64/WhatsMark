@@ -9,7 +9,6 @@ use App\Traits\SendMailTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\URL;
 
@@ -58,22 +57,22 @@ class AuthController extends Controller
             return redirect()->back()->with('error', t('user_not_found'));
         }
 
-        if ($user->email_verified_at) {
+        // if ($user->email_verified_at) {
             return to_route('admin.dashboard');
-        }
+        // }
 
-        $varifiedUrl = $this->generateEmailVerificationUrl($user);
+        // $varifiedUrl = $this->generateEmailVerificationUrl($user);
 
-        if (isSmtpValid()) {
+        // if (isSmtpValid()) {
 
-            $isSent = $this->sendMail($user->email, new VerificationMail("Hello {$user->name}", $varifiedUrl, t('Click To Verify Email'), 'email-confirmation', $user->id));
+        //     $isSent = $this->sendMail($user->email, new VerificationMail("Hello {$user->name}", $varifiedUrl, t('Click To Verify Email'), 'email-confirmation', $user->id));
 
-            return $isSent['status']
-            ? redirect()->back()->with('status', t('email_sent_successfull_with_emoji'))
-            : redirect()->back()->with('error', t('email_not_sent_try_again'));
-        }
+        //     return $isSent['status']
+        //     ? redirect()->back()->with('status', t('email_sent_successfull_with_emoji'))
+        //     : redirect()->back()->with('error', t('email_not_sent_try_again'));
+        // }
 
-        return redirect()->back()->with('error', t('email_service_not_configured'));
+        // return redirect()->back()->with('error', t('email_service_not_configured'));
     }
 
     public function generatePasswordResetUrl($user)
@@ -86,16 +85,23 @@ class AuthController extends Controller
 
         return URL::temporarySignedRoute(
             'password.reset',
-            Carbon::now()->addMinutes(Config::get('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60)),
+            Carbon::now()->addMinutes(
+                config('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60)
+            ),
             ['token' => $token, 'email' => $user->email]
         );
     }
 
     public function generateEmailVerificationUrl($user)
     {
+        $expireMinutes = config('auth.verification.expire');
+        if (! is_numeric($expireMinutes)) {
+            $expireMinutes = 60;
+        }
+
         return URL::temporarySignedRoute(
             'verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            Carbon::now()->addMinutes($expireMinutes),
             ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]
         );
     }

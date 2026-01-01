@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Component;
@@ -73,6 +74,14 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configurePusher(): void
     {
+        try {
+            if (! Schema::hasTable('settings')) {
+                return;
+            }
+        } catch (\Throwable $e) {
+            return;
+        }
+
         try {
             $pusherSettings = app(PusherSettings::class);
             if (empty($pusherSettings->app_id)) {

@@ -16,6 +16,9 @@ class ContactNotesSeeder extends Seeder
     public function run()
     {
         $contactIds = Contact::pluck('id')->toArray();  // Get all valid contact IDs
+        if (empty($contactIds)) {
+            return;
+        }
 
         foreach (range(1, 100) as $index) {
             // Pick a random contact ID from the existing contacts

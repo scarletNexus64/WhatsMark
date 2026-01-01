@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->boolean('is_enabled')->default(true)->after('assigned_id');
-            $table->timestamp('last_activity')->nullable()->after('is_enabled');
-            $table->json('custom_fields')->nullable()->after('last_activity');
+            if (! Schema::hasColumn('contacts', 'is_enabled')) {
+                $table->boolean('is_enabled')->default(true)->after('assigned_id');
+            }
+            if (! Schema::hasColumn('contacts', 'last_activity')) {
+                $table->timestamp('last_activity')->nullable()->after('is_enabled');
+            }
+            if (! Schema::hasColumn('contacts', 'custom_fields')) {
+                $table->json('custom_fields')->nullable()->after('last_activity');
+            }
         });
     }
 
@@ -24,7 +30,19 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->dropColumn(['is_enabled', 'last_activity', 'custom_fields']);
+            $columns = [];
+            if (Schema::hasColumn('contacts', 'is_enabled')) {
+                $columns[] = 'is_enabled';
+            }
+            if (Schema::hasColumn('contacts', 'last_activity')) {
+                $columns[] = 'last_activity';
+            }
+            if (Schema::hasColumn('contacts', 'custom_fields')) {
+                $columns[] = 'custom_fields';
+            }
+            if (! empty($columns)) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

@@ -188,8 +188,16 @@ class Dashboard extends Component
     // Get message counts by period
     protected function getMessageCountsByPeriod(Carbon $startDate, Carbon $endDate, string $mysqlFormat): array
     {
+        $driver = DB::connection()->getDriverName();
+        $format = $mysqlFormat;
+        $periodExpression = "DATE_FORMAT(time_sent, '{$format}')";
+
+        if ($driver === 'sqlite') {
+            $periodExpression = "strftime('{$format}', time_sent)";
+        }
+
         return ChatMessage::select(
-            DB::raw("DATE_FORMAT(time_sent, '{$mysqlFormat}') as period"),
+            DB::raw("{$periodExpression} as period"),
             DB::raw('COUNT(*) as count')
         )
             ->where('time_sent', '>=', $startDate)

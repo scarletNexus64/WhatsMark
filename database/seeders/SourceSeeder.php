@@ -12,23 +12,31 @@ class SourceSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Source::firstOrCreate(
-            ['id' => 1],
-            ['name' => 'Default']
-        );
-        
-        // Add some common default sources
-        $sources = [
-            'Website',
-            'Social Media',
-            'Email Campaign',
-            'Referral',
-            'Direct Contact',
-            'WhatsApp'
+        $seedSources = [
+            ['id' => 1, 'name' => 'facebook'],
+            ['id' => 2, 'name' => 'whatsapp'],
+            ['id' => 3, 'name' => 'saas'],
+            ['name' => 'Default'],
+            ['name' => 'Website'],
+            ['name' => 'Social Media'],
+            ['name' => 'Email Campaign'],
+            ['name' => 'Referral'],
+            ['name' => 'Direct Contact'],
         ];
-        
-        foreach ($sources as $source) {
-            \App\Models\Source::firstOrCreate(['name' => $source]);
+
+        foreach ($seedSources as $source) {
+            if (isset($source['id'])) {
+                \App\Models\Source::updateOrCreate(
+                    ['id' => $source['id']],
+                    ['name' => $source['name']]
+                );
+                continue;
+            }
+
+            \App\Models\Source::updateOrCreate(
+                ['name' => $source['name']],
+                ['name' => $source['name']]
+            );
         }
     }
 }

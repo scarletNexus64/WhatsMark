@@ -49,10 +49,11 @@ use App\Livewire\Admin\User\UserList;
 use App\Livewire\Admin\Waba\ConnectWaba;
 use App\Livewire\Admin\Waba\DisconnectWaba;
 use App\Livewire\LogViewer;
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+// use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', AdminMiddleware::class, SanitizeInputs::class, EnsureEmailIsVerified::class])
+ // EnsureEmailIsVerified::class]
+Route::middleware(['auth', AdminMiddleware::class, SanitizeInputs::class])
 
     ->group(function () {
         // Dashboard

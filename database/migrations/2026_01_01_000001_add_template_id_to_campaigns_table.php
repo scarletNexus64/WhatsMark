@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('statuses', function (Blueprint $table) {
-            $table->boolean('isdefault')->default(false)->after('is_active');
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->string('template_id')->nullable()->after('media');
+            $table->index('template_id');
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('statuses', function (Blueprint $table) {
-            $table->dropColumn('isdefault');
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->dropIndex(['template_id']);
+            $table->dropColumn('template_id');
         });
     }
 };

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('is_admin')->default(0);
             $table->boolean('send_welcome_mail')->default(0);
             $table->boolean('active')->default(1);
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->timestamp('banned_at')->nullable();

@@ -58,7 +58,7 @@ class WmActivityLog extends Model
         'category',
         'category_id',
         'rel_type',
-        'rel_id	',
+        'rel_id',
         'category_params',
         'raw_data',
     ];

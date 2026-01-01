@@ -36,6 +36,10 @@ class Notification extends Model
 {
     use HasUuids;
 
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     /**
      * The table associated with the model.
      *
