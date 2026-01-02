@@ -30,19 +30,23 @@ class WhatsAppWebhookController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $hubMode = $request->query('hub_mode', $request->query('hub.mode'));
+        $hubChallenge = $request->query('hub_challenge', $request->query('hub.challenge'));
+        $hubVerifyToken = $request->query('hub_verify_token', $request->query('hub.verify_token'));
+
         whatsapp_log(
             'Webhook Received',
             'debug',
             [
                 'method'           => $request->method(),
                 'full_url'         => $request->fullUrl(),
-                'hub_mode'         => $request->input('hub_mode'),
-                'hub_verify_token' => $request->input('hub_verify_token'),
+                'hub_mode'         => $hubMode,
+                'hub_verify_token' => $hubVerifyToken,
             ]
         );
 
         // WhatsApp Webhook Verification
-        if (isset($_GET['hub_mode']) && isset($_GET['hub_challenge']) && isset($_GET['hub_verify_token'])) {
+        if ($hubMode !== null && $hubChallenge !== null && $hubVerifyToken !== null) {
             // Retrieve verify token from settings
             $verifyToken = get_setting('whatsapp.webhook_verify_token');
 
@@ -50,39 +54,34 @@ class WhatsAppWebhookController extends Controller
                 'Webhook Verification Attempt',
                 'debug',
                 [
-                    'received_token' => $_GET['hub_verify_token'],
+                    'received_token' => $hubVerifyToken,
                     'expected_token' => $verifyToken,
-                    'hub_mode'       => $_GET['hub_mode'],
-                    'hub_challenge'  => $_GET['hub_challenge'],
+                    'hub_mode'       => $hubMode,
+                    'hub_challenge'  => $hubChallenge,
                 ]
             );
 
             // Verify the webhook
-            if ($_GET['hub_verify_token'] == $verifyToken && $_GET['hub_mode'] == 'subscribe') {
+            if ($hubVerifyToken == $verifyToken && $hubMode == 'subscribe') {
                 whatsapp_log(
                     'Webhook Verification Successful',
                     'info'
                 );
 
-                // Directly output the challenge with proper headers
-                header('Content-Type: text/plain');
-                echo $_GET['hub_challenge'];
-                exit;
+                return response($hubChallenge, 200)
+                    ->header('Content-Type', 'text/plain');
             } else {
                 whatsapp_log(
                     'Webhook Verification Failed',
                     'warning',
                     [
-                        'received_token' => $_GET['hub_verify_token'],
-                        'hub_mode'       => $_GET['hub_mode'],
+                        'received_token' => $hubVerifyToken,
+                        'hub_mode'       => $hubMode,
                     ]
                 );
 
-                // Send 403 Forbidden with a clear error message
-                header('HTTP/1.1 403 Forbidden');
-                header('Content-Type: text/plain');
-                echo 'Verification failed: Invalid token or mode';
-                exit;
+                return response('Verification failed: Invalid token or mode', 403)
+                    ->header('Content-Type', 'text/plain');
             }
         }
 

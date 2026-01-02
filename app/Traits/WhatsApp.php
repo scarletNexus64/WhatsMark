@@ -431,15 +431,22 @@ trait WhatsApp
 
         try {
             $url = self::$facebookAPI . $appId . '/subscriptions?access_token=' . $appId . '|' . $appSecret;
+            $appUrl = rtrim((string) config('app.url'), '/');
+            $callbackUrl = $appUrl . '/whatsapp/webhook';
 
             $response = Http::post($url, [
                 'object'       => 'whatsapp_business_account',
                 'fields'       => 'messages,message_template_quality_update,message_template_status_update,account_update',
-                'callback_url' => route('whatsapp.webhook'),
+                'callback_url' => $callbackUrl,
                 'verify_token' => get_setting('whatsapp.webhook_verify_token'),
             ]);
 
             $data = $response->json();
+            whatsapp_log('Webhook Connect Response', 'debug', [
+                'status'   => $response->status(),
+                'body'     => $data,
+                'callback' => $callbackUrl,
+            ]);
 
             if (isset($data['error'])) {
                 return [

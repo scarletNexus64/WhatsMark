@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('address')->nullable();
             $table->foreignId('assigned_id')->nullable()->constrained('users');
-            $table->enum('status', ['pending', 'sent', 'delivered', 'read', 'failed'])->default('pending')->after('message_id');
+            $table->enum('status', ['pending', 'sent', 'delivered', 'read', 'failed'])->default('pending');
             $table->foreignId('source_id')->nullable()->constrained('sources');
             $table->string('email')->nullable();
             $table->string('website')->nullable();

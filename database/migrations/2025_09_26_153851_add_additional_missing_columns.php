@@ -50,10 +50,10 @@ return new class extends Migration
         // Add missing columns to chat table
         Schema::table('chat', function (Blueprint $table) {
             if (!Schema::hasColumn('chat', 'whatsapp_chat_id')) {
-                $table->string('whatsapp_chat_id')->nullable()->after('user_id');
+                $table->string('whatsapp_chat_id')->nullable()->after('type_id');
             }
             if (!Schema::hasColumn('chat', 'metadata')) {
-                $table->json('metadata')->nullable()->after('last_message_at');
+                $table->json('metadata')->nullable()->after('whatsapp_chat_id');
             }
             if (!Schema::hasColumn('chat', 'is_archived')) {
                 $table->boolean('is_archived')->default(false)->after('metadata');

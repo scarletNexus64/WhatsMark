@@ -11,6 +11,9 @@ ID du numéro de téléphone : 944979078700319
 ==========whatsapp==========
 token=EAAMNF6uJS3oBQSxouzBYJM779OZCP4EE998fc8DOmBfCa4h9GnNJikxVTQLGurIuLyZCwV0hD1nZB431F9zqm2KZBghG0TNbXMX2BBtCZBcIWV8OVqT68RTYlHeb9dvAbcLUEn2Q3QecsfSzCAMSKY4PdrCRw0op5wk5ohmrZCre9D9TWThskZB97XZBvIR7ogZDZD
 
+========Ngrok=======
+token=37efL1Km4G29LtruO2TU5YdgrHN_YgnqwsrtQCTCD3WJptwU
+
 
 ▼
 {"object":"whatsapp_business_account","entry":[{"id":"1541165313816036","changes...
